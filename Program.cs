@@ -19,7 +19,6 @@ class Item
         if(quantity < 0)
         {
             Console.WriteLine("Quantity cannot be negative.");
-            return;
         }
         Name = name;
         Quantity = quantity;
@@ -32,20 +31,28 @@ class Item
     }
 } 
 
-class Store
+class Store (int capacity)
 {
     private List<Item> items = new List<Item>();
+    private int maxCapacity = capacity;
 
     public void AddItem(Item item)
     {
+        if (items.Count >= maxCapacity)
+        {
+            Console.WriteLine($"Maximum capacity of {maxCapacity} items reached. Cannot add {item.Name} to store.");
+            return;
+        }
         if (items.Any(i => i.Name == item.Name))
         {
             Console.WriteLine($"Item '{item.Name}' already exists in the store. Cannot add duplicate items.");
+            return;
         }
         else
         {
         items.Add(item);
         Console.WriteLine($"Item '{item.Name}' added successfully.");
+        return;
         }
     }
     public void printItems()
@@ -115,9 +122,10 @@ class Program
         var batteries = new Item("Batteries", 10);
         var umbrella = new Item("Umbrella", 5);
         var sunscreen = new Item("Sunscreen", 8);
+        var handcream = new Item("Hand cream", 2);
 
         
-        var store = new Store();
+        var store = new Store(15);
 
         store.AddItem(waterBottle);
         store.AddItem(chocolateBar);
@@ -130,12 +138,14 @@ class Program
         store.AddItem(shampoo);
         store.AddItem(toothbrush);
         store.AddItem(coffee);
+        store.AddItem(chocolateBar);
         store.AddItem(sandwich);
         store.AddItem(batteries);
         store.AddItem(umbrella);
         store.AddItem(sunscreen);
+        store.AddItem(handcream);
 
-        store.AddItem(chocolateBar);
+        
         Console.WriteLine("----------------------------------------------------------------");
 
         store.printItems();
