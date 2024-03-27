@@ -100,7 +100,27 @@ class Store (int capacity)
     {
         return items.OrderBy(i => i.Name).ToList();
     }
+
+    
+    public List<Item> SortByDate(SortOrder sortOrder)
+    {
+        if (sortOrder == SortOrder.ASC)
+        {
+            return items.OrderBy(i => i.CreatedDate).ToList();
+        }
+        else
+        {
+            return items.OrderByDescending(i => i.CreatedDate).ToList();
+        }
+    }
 }
+
+public enum SortOrder
+{
+    ASC,
+    DESC
+}
+
 
 class Program
 {
@@ -173,6 +193,12 @@ class Program
             Console.WriteLine($"{item}");
         }
     
-        
+        // Sort items by Date
+        var sortedItemsByDate = store.SortByDate(SortOrder.ASC);
+        Console.WriteLine("Sorted items by Date:");
+        foreach (var item in sortedItemsByDate)
+        {
+            Console.WriteLine($"{item}");
+        }
     }
 }
