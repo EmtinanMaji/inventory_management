@@ -31,10 +31,15 @@ class Item
     }
 } 
 
-class Store (int capacity)
+class Store
 {
     private List<Item> items = new List<Item>();
-    private int maxCapacity = capacity;
+    private int maxCapacity;
+
+    public Store(int capacity)
+    {
+        maxCapacity = capacity;
+    }
 
     public void AddItem(Item item)
     {
@@ -112,6 +117,18 @@ class Store (int capacity)
         {
             return items.OrderByDescending(i => i.CreatedDate).ToList();
         }
+    }
+
+    public Dictionary<string, List<Item>> GroupByDate()
+    {
+        var newItems = items.Where(i => i.CreatedDate >= DateTime.Now.AddMonths(-3)).ToList();
+        var oldItems = items.Except(newItems).ToList();
+
+        Dictionary<string, List<Item>> groupedItems = new Dictionary<string, List<Item>>();
+        groupedItems.Add("New Arrival Items:", newItems);
+        groupedItems.Add("Old Items:", oldItems);
+
+        return groupedItems;
     }
 }
 
@@ -192,6 +209,7 @@ class Program
         {
             Console.WriteLine($"{item}");
         }
+        Console.WriteLine("----------------------------------------------------------------");
     
         // Sort items by Date
         var sortedItemsByDate = store.SortByDate(SortOrder.ASC);
@@ -199,6 +217,17 @@ class Program
         foreach (var item in sortedItemsByDate)
         {
             Console.WriteLine($"{item}");
+        }
+        Console.WriteLine("----------------------------------------------------------------");
+
+        var groupByDate = store.GroupByDate();
+        foreach (var group in groupByDate)
+        {
+            Console.WriteLine($"{group.Key}:");
+            foreach (var item in group.Value)
+            {
+                Console.WriteLine($" - {item.Name}, Created: {item.CreatedDate.ToShortDateString()}");
+            }
         }
     }
 }
